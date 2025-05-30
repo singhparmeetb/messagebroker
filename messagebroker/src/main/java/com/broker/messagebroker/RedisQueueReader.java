@@ -1,5 +1,7 @@
 package com.broker.messagebroker;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
+
 import com.broker.messageProcessor.SimpleProcessor;
 
 import lombok.Getter;

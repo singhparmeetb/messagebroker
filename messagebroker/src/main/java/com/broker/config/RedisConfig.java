@@ -1,30 +1,68 @@
 package com.broker.config;
 
-import java.time.Duration;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import redis.clients.jedis.Jedis;
 
-import lombok.Getter;
-import lombok.Setter;
-import redis.clients.jedis.JedisFactory;
-
-@Configuration
-@ConfigurationProperties(prefix = "server")
-@Getter
-@Setter
 public class RedisConfig {
 
+    private String name;
     private String host;
     private int port;
+    private String userName;
     private String password;
-    private int maxActive;
-    private int maxIdle;
-    private int minIdle;
-    private Duration maxWait;
+    private GenericObjectPoolConfig genericObjectPoolConfig;
 
-    public JedisFactory jedisFactory(){
-        return new 
+    public String getName() {
+        return name;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public GenericObjectPoolConfig getGenericObjectPoolConfig() {
+        return genericObjectPoolConfig;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setMaxIdle(int maxIdle) {
+        this.genericObjectPoolConfig.setMaxIdle(maxIdle);
+    }
+
+    public void setMaxTotal(int maxTotal) {
+        this.genericObjectPoolConfig.setMaxTotal(maxTotal);
     }
 
 }

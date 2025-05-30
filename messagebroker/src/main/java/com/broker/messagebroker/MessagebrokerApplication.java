@@ -5,23 +5,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.broker.messageProcessor.SimpleProcessor;
+import com.broker.config.RedisServers;
 
 import jakarta.annotation.PreDestroy;
-import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @SpringBootApplication
 public class MessagebrokerApplication implements CommandLineRunner {
 
-	@Resource
-	private StringRedisTemplate stringRedisTemplate;
+	@Autowired
+	private RedisServers redisServers;
 
 	private Map<RedisQueueReader, Thread> queueReaders;
 
@@ -32,7 +32,8 @@ public class MessagebrokerApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 
-		RedisQueueReader queueReader = new RedisQueueReader("test", stringRedisTemplate, new SimpleProcessor(),
+		RedisQueueReader queueReader = new RedisQueueReader("test", redisServers.getStringRedisTemplate("server"),
+				new SimpleProcessor(),
 				"TestReader");
 		Thread queueReaderThread = new Thread(queueReader);
 		this.queueReaders = new HashMap<>();
