@@ -2,8 +2,6 @@ package com.broker.config;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
-import redis.clients.jedis.Jedis;
-
 public class RedisConfig {
 
     private String name;
@@ -11,7 +9,7 @@ public class RedisConfig {
     private int port;
     private String userName;
     private String password;
-    private GenericObjectPoolConfig genericObjectPoolConfig;
+    private GenericObjectPoolConfig genericObjectPoolConfig = new GenericObjectPoolConfig<>();
 
     public String getName() {
         return name;
@@ -63,6 +61,12 @@ public class RedisConfig {
 
     public void setMaxTotal(int maxTotal) {
         this.genericObjectPoolConfig.setMaxTotal(maxTotal);
+    }
+
+    @Override
+    public String toString() {
+        return "RedisConfig [name=" + name + ", host=" + host + ", port=" + port + ", userName=" + userName
+                + ", password=" + password + "]";
     }
 
 }

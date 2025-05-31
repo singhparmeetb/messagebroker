@@ -11,21 +11,26 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 
-@Configuration
-@ConfigurationProperties(prefix = "RedisServer")
+@Slf4j
+@Component
+@ConfigurationProperties(prefix = "redis-servers")
 public class RedisServers {
     private List<RedisConfig> redisConfigs;
     Map<String, JedisConnectionFactory> redisConnections;
 
     @PostConstruct
     private void init() {
-        Map<String, JedisConnectionFactory> redisConnections = new HashMap<>();
+        redisConnections = new HashMap<String, JedisConnectionFactory>();
         for (RedisConfig redisConfig : redisConfigs) {
             JedisConnectionFactory serverConnectionFactory = setUpJedisConnectionFactory(redisConfig);
             redisConnections.put(redisConfig.getName(), serverConnectionFactory);
+            serverConnectionFactory.afterPropertiesSet();
+            log.debug(redisConfig.toString());
         }
     }
 
@@ -45,8 +50,13 @@ public class RedisServers {
         return new StringRedisTemplate(redisConnections.get(serverName));
     }
 
+    public void setRedisConfigs(List<RedisConfig> redisConfigs) {
+        this.redisConfigs = redisConfigs;
+    }
+
     // private StringRedisTemplate getStringRedisTemplate(JedisConnectionFactory
     // connectionFactory) {
     // return new StringRedisTemplate(connectionFactory);
     // }
+
 }

@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.broker.messageProcessor.SimpleProcessor;
 import com.broker.config.RedisServers;
@@ -16,6 +19,9 @@ import com.broker.config.RedisServers;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.log4j.Log4j2;
 
+@EntityScan(value = "com.broker")
+@ComponentScan(value = "com.broker")
+@EnableTransactionManagement
 @Log4j2
 @SpringBootApplication
 public class MessagebrokerApplication implements CommandLineRunner {
