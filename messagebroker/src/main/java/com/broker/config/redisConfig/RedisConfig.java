@@ -1,4 +1,4 @@
-package com.broker.config;
+package com.broker.config.redisConfig;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
@@ -7,7 +7,6 @@ public class RedisConfig {
     private String name;
     private String host;
     private int port;
-    private String userName;
     private String password;
     private GenericObjectPoolConfig genericObjectPoolConfig = new GenericObjectPoolConfig<>();
 
@@ -21,10 +20,6 @@ public class RedisConfig {
 
     public int getPort() {
         return port;
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     public String getPassword() {
@@ -47,10 +42,6 @@ public class RedisConfig {
         this.port = port;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -65,8 +56,7 @@ public class RedisConfig {
 
     @Override
     public String toString() {
-        return "RedisConfig [name=" + name + ", host=" + host + ", port=" + port + ", userName=" + userName
-                + ", password=" + password + "]";
+        return "RedisConfig [name=" + name + ", host=" + host + ", port=" + port + ", password=" + password + "]";
     }
 
 }

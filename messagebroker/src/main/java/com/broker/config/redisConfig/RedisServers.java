@@ -1,11 +1,10 @@
-package com.broker.config;
+package com.broker.config.redisConfig;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
@@ -21,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @ConfigurationProperties(prefix = "redis-servers")
 public class RedisServers {
     private List<RedisConfig> redisConfigs;
-    Map<String, JedisConnectionFactory> redisConnections;
+    private Map<String, JedisConnectionFactory> redisConnections;
 
     @PostConstruct
     private void init() {
@@ -52,6 +51,12 @@ public class RedisServers {
 
     public void setRedisConfigs(List<RedisConfig> redisConfigs) {
         this.redisConfigs = redisConfigs;
+    }
+
+    private void closeRedisConnections() {
+        for (Map.Entry<String, JedisConnectionFactory> entry : redisConnections.entrySet()) {
+            entry.getValue().stop();
+        }
     }
 
     // private StringRedisTemplate getStringRedisTemplate(JedisConnectionFactory

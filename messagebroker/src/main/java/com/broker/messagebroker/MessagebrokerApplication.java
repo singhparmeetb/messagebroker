@@ -1,8 +1,6 @@
 package com.broker.messagebroker;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.broker.config.redisConfig.RedisServers;
 import com.broker.messageProcessor.SimpleProcessor;
-import com.broker.config.RedisServers;
 
 import jakarta.annotation.PreDestroy;
 import lombok.extern.log4j.Log4j2;
@@ -37,7 +35,8 @@ public class MessagebrokerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-
+		redisServers.getStringRedisTemplate("server").opsForList().leftPush("test", "Hello");
+		log.debug("After pushing message to redis");
 		RedisQueueReader queueReader = new RedisQueueReader("test", redisServers.getStringRedisTemplate("server"),
 				new SimpleProcessor(),
 				"TestReader");
@@ -56,9 +55,8 @@ public class MessagebrokerApplication implements CommandLineRunner {
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-				System.err.println("Inside Interrupted exception in main");
+				log.warn("Inside Interrupted exception in main");
 			}
 		});
 		System.err.println("After shutting down in Main");
