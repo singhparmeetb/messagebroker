@@ -7,9 +7,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class queueReaderConfig {
+public class ProducerConfig {
     private String queueName;
     private String serverName;
-    private String messageProcessorName;
+    private String serializerName;
 
 }

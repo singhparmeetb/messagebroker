@@ -1,7 +1,7 @@
-package com.broker.beans.baseMessagePager;
+package com.broker.beans.baseMessageBroker;
 
-import com.broker.beans.messagePager.MessageProcessor;
-import com.broker.beans.messagePager.MessageReader;
+import com.broker.beans.messageBroker.MessageProcessor;
+import com.broker.beans.messageBroker.MessageReader;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,9 +1,9 @@
-package com.broker.beans.baseMessagePager;
+package com.broker.beans.baseMessageBroker;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.broker.beans.MessageStatusUpdater;
-import com.broker.beans.messagePager.MessageProcessor;
+import com.broker.beans.messageBroker.MessageProcessor;
 import com.broker.beans.messageSerializer.MessageSerializer;
 
 import jakarta.transaction.Transactional;

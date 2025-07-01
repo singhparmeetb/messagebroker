@@ -2,7 +2,7 @@ package com.broker.redis;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import com.broker.beans.baseMessagePager.BaseMessageReader;
+import com.broker.beans.baseMessageBroker.BaseMessageReader;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,16 +13,31 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @AllArgsConstructor
 @Slf4j
-public class RedisMessageReader extends BaseMessageReader {
+public class RedisMessageReader extends BaseMessageReader implements Runnable {
 
     private String queueName;
     private String server;
     private StringRedisTemplate stringRedisTemplate;
     private String processorName;
 
+    private volatile boolean shutdown = false;
+
     @Override
     public String read() {
         return stringRedisTemplate.opsForList().leftPop(queueName);
+    }
+
+    @Override
+    public void run() {
+        log.debug("Starting to Poll Queue{} from {}", queueName, Thread.currentThread().getName());
+        while (!shutdown) {
+            readAndProcess();
+        }
+        log.debug("Shutting Down {}", Thread.currentThread().getName());
+    }
+
+    public void shutdownReader() {
+        this.shutdown = true;
     }
 
 }

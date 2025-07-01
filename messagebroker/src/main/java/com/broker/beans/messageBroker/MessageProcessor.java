@@ -1,4 +1,4 @@
-package com.broker.beans.messagePager;
+package com.broker.beans.messageBroker;
 
 public interface MessageProcessor<M> {
     boolean processRawMessage(String rawMessage);
