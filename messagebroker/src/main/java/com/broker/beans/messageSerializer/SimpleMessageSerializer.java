@@ -8,7 +8,7 @@ public class SimpleMessageSerializer implements MessageSerializer<String> {
     }
 
     @Override
-    public String serialiceMessage(String message) {
+    public String serializeMessage(String message) {
         return message;
     }
 

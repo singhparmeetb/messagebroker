@@ -1,4 +1,4 @@
-package com.broker.config.redisConfig;
+package com.broker.redis.config;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 

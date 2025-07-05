@@ -30,11 +30,14 @@ public class MessageTracker {
     @Column(name = "from_system", nullable = false)
     private String fromSystem;
 
-    @Column(name = "queue_name", nullable = false)
-    private String queueName;
+    @Column(name = "channel", nullable = false)
+    private String channel;
 
     @Column(name = "processor_name")
     private String processorName;
+
+    @Column(name = "message")
+    private String message;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -45,6 +48,9 @@ public class MessageTracker {
 
     @Column(name = "end_time")
     private LocalDateTime endTime;
+
+    @Column(name = "last_sent_time")
+    private LocalDateTime lastSentTime;
 
     @Column(name = "retry_count")
     private Integer retryCount;

@@ -1,4 +1,4 @@
-package com.broker.config.redisConfig;
+package com.broker.redis.config;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +53,7 @@ public class RedisServers {
         this.redisConfigs = redisConfigs;
     }
 
-    private void closeRedisConnections() {
+    public void closeRedisConnections() {
         for (Map.Entry<String, JedisConnectionFactory> entry : redisConnections.entrySet()) {
             entry.getValue().stop();
         }

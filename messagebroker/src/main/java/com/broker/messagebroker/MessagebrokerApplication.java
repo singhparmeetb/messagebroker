@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.broker.config.redisConfig.RedisServers;
 import com.broker.messageProcessor.SimpleProcessor;
+import com.broker.redis.config.RedisServers;
 
 import jakarta.annotation.PreDestroy;
 import lombok.extern.log4j.Log4j2;

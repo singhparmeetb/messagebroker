@@ -2,9 +2,7 @@ package com.broker.redis;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import com.broker.beans.messageBroker.MessageSender;
-import com.broker.beans.messageSerializer.MessageSerializer;
-
+import com.broker.beans.baseMessageBroker.BaseMessageSender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,21 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @AllArgsConstructor
 @Slf4j
-public class RedisMessageSender<M> implements MessageSender<M> {
+public class RedisMessageSender extends BaseMessageSender<String> {
 
     private String queueName;
     private StringRedisTemplate stringRedisTemplate;
     private String server;
-    private MessageSerializer<M> messageSerializer;
 
     @Override
-    public void send(M message) {
-        stringRedisTemplate.opsForList().rightPush(queueName, messageSerializer.serializeMessage(message));
+    public void send(String message) {
+        log.debug("Sending message to queue {} :: {}", queueName, message);
+        stringRedisTemplate.opsForList().rightPush(queueName, message);
     }
 
-    @Override
-    public void send(M message, String queueToSend) {
-        stringRedisTemplate.opsForList().rightPush(queueToSend, messageSerializer.serializeMessage(message));
-    }
+    // @Override
+    // public void send(M message, String queueToSend) {
+    // stringRedisTemplate.opsForList().rightPush(queueToSend,
+    // messageSerializer.serializeMessage(message));
+    // }
 
 }

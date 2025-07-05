@@ -8,4 +8,11 @@ public class MessageBrokerInitiator {
 
     @Autowired
     private QueuesConfig queuesConfig;
+
+    //private 
+
+    public void setProcessorName(){
+
+    }
+
 }

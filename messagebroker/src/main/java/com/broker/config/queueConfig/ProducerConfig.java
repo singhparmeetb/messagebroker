@@ -11,5 +11,6 @@ public class ProducerConfig {
     private String queueName;
     private String serverName;
     private String serializerName;
+    private String filterCriteria;
 
 }
