@@ -7,12 +7,12 @@ import com.broker.beans.baseMessageBroker.BaseMessageReader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@Slf4j
+@Log4j2
 public class RedisMessageReader extends BaseMessageReader implements Runnable {
 
     private String queueName;
@@ -38,6 +38,10 @@ public class RedisMessageReader extends BaseMessageReader implements Runnable {
 
     public void shutdownReader() {
         this.shutdown = true;
+    }
+
+    public void start() {
+        Thread.currentThread().start();
     }
 
 }

@@ -25,7 +25,7 @@ public class QueuesConfig {
         return readers.stream();
     }
 
-    public Stream<ProducerConfig> getProducerConfig() {
+    public Stream<ProducerConfig> getProducerConfigs() {
         if (this.producers == null) {
             return new ArrayList<ProducerConfig>().stream();
         }
