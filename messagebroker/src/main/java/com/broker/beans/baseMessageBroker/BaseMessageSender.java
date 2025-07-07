@@ -13,6 +13,5 @@ public abstract class BaseMessageSender<M> implements MessageSender<M> {
 
     private QueueFilter queueFilter;
     private MessageSerializer<M> messageSerializer;
-    private String channel;
 
 }

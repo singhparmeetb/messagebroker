@@ -17,6 +17,7 @@ import com.broker.config.queueConfig.QueuesConfig;
 import com.broker.config.queueConfig.ReaderConfig;
 import com.broker.exception.ExecutionException;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -34,14 +35,23 @@ public abstract class MessageInitiator implements ApplicationContextAware {
 
     private Map<String, MessageProcessor> messageProcessorsByName;
 
+    private Map<String, MessageSerializer> messageSerializersByName;
+
     private ApplicationContext applicationContext;
 
-    // @PostConstruct
-    // private void init() {
-    // String processorName;
+    @PostConstruct
+    private void init() {
+        queuesConfig.getProducerConfigs().forEach(x -> {
+            populateFilterMap(x);
+            populateMessageSerializerMap(x);
+        });
 
-    // String applicationName=
-    // }
+        queuesConfig.getReaderConfigs().forEach(x -> {
+            populateProcessorMap(x);
+            populateMessageSerializerMap(x);
+        });
+
+    }
 
     // public Integer void getProcessorId();
 
@@ -65,28 +75,72 @@ public abstract class MessageInitiator implements ApplicationContextAware {
         }
 
         BaseMessageProcessor messageProcessor = (BaseMessageProcessor) applicationContext
-                .getBean(readerConfig.getMessageProcessorName());
+                .getBean(readerConfig.getMessageProcessor());
 
         MessageSerializer serializer;
-        if (readerConfig.getSerializerName() == null || readerConfig.getSerializerName().isBlank()) {
+        if (readerConfig.getMessageSerializer() == null || readerConfig.getMessageSerializer().isBlank()) {
             serializer = applicationContext.getBean("DefaultMessageSerializer",
                     MessageSerializer.class);
         } else {
-            serializer = applicationContext.getBean(readerConfig.getSerializerName(),
+            serializer = applicationContext.getBean(readerConfig.getMessageSerializer(),
                     MessageSerializer.class);
         }
         messageProcessor.setSerializer(serializer);
 
-        messageProcessorsByName.put(readerConfig.getMessageProcessorName(), messageProcessor);
+        messageProcessorsByName.put(readerConfig.getMessageProcessor(), messageProcessor);
 
     }
 
-    protected MessageProcessor getMessageProcessor(String messageProcessorName) {
-        if (!messageProcessorsByName.containsKey(messageProcessorName)) {
-            log.error("No such processor Found {} in MessageInitiator", messageProcessorName);
+    protected MessageProcessor getMessageProcessor(String messageProcessor) {
+        if (!messageProcessorsByName.containsKey(messageProcessor)) {
+            log.error("No such processor Found {} in MessageInitiator", messageProcessor);
             throw new ExecutionException("Invalid MessageProcessor");
         }
-        return messageProcessorsByName.get(messageProcessorName);
+        return messageProcessorsByName.get(messageProcessor);
+    }
+
+    protected QueueFilter getQueueFilterBy(String filter) {
+        return filterByNames.get(filter);
+    }
+
+    private void populateMessageSerializerMap(ReaderConfig readerConfig) {
+        MessageSerializer serializer = null;
+        if (readerConfig.getMessageSerializer() != null || !readerConfig.getMessageSerializer().isBlank()) {
+            serializer = applicationContext.getBean(readerConfig.getMessageSerializer(),
+                    MessageSerializer.class);
+        }
+
+        if (this.messageSerializersByName == null) {
+            this.messageSerializersByName = new HashMap<String, MessageSerializer>();
+        }
+
+        if (serializer != null && !messageSerializersByName.containsKey(readerConfig.getMessageSerializer())) {
+            messageSerializersByName.put(readerConfig.getMessageSerializer(), serializer);
+        }
+    }
+
+    private void populateMessageSerializerMap(ProducerConfig producerConfig) {
+        MessageSerializer serializer = null;
+        if (producerConfig.getMessageSerializer() != null || !producerConfig.getMessageSerializer().isBlank()) {
+            serializer = applicationContext.getBean(producerConfig.getMessageSerializer(),
+                    MessageSerializer.class);
+        }
+
+        if (this.messageSerializersByName == null) {
+            this.messageSerializersByName = new HashMap<String, MessageSerializer>();
+        }
+
+        if (serializer != null && !messageSerializersByName.containsKey(producerConfig.getMessageSerializer())) {
+            messageSerializersByName.put(producerConfig.getMessageSerializer(), serializer);
+        }
+    }
+
+    protected MessageSerializer getMessageSerializer(String messageSerializer) {
+        if (!messageSerializersByName.containsKey(messageSerializer)) {
+            return applicationContext.getBean("DefaultMessageSerializer", MessageSerializer.class);
+        } else {
+            return messageSerializersByName.get(messageSerializer);
+        }
     }
 
 }

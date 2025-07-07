@@ -8,9 +8,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ProducerConfig {
-    private String queueName;
-    private String serverName;
-    private String serializerName;
+    private String queue;
+    private String server;
+    private String messageSerializer;
     private String filter;
     private String filterCriteria;
 

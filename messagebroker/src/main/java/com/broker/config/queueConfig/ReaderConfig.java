@@ -8,9 +8,17 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ReaderConfig {
-    private String queueName;
-    private String serverName;
-    private String messageProcessorName;
-    private String serializerName;
+    private String queue;
+    private String server;
+    private String messageProcessor;
+    private String messageSerializer;
+    private Integer numberOfInstances;
+
+    public Integer getNumberOfInstances() {
+        if (this.numberOfInstances == null) {
+            return 1;
+        }
+        return numberOfInstances;
+    }
 
 }
