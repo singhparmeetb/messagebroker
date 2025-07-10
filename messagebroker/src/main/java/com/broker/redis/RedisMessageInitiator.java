@@ -14,7 +14,9 @@ import com.broker.redis.config.RedisServers;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Component
 public class RedisMessageInitiator
         extends MessageInitiator {
@@ -29,23 +31,25 @@ public class RedisMessageInitiator
     @PostConstruct
     private void init() {
         getQueuesConfig().getReaderConfigs().forEach(x -> {
+            log.debug("InstantiatingReader");
             for (int i = 0; i < x.getNumberOfInstances(); i++) {
-                readers.add(instantiateReader(x));
+                readers.add(instantiateReader(x, i));
             }
         });
 
         getQueuesConfig().getProducerConfigs().forEach(x -> {
+            log.debug("Instantiating Producers");
             senders.add(instantiateSender(x));
         });
 
         startAllReaders();
     }
 
-    private RedisMessageReader instantiateReader(ReaderConfig readerConfig) {
+    private RedisMessageReader instantiateReader(ReaderConfig readerConfig, int instanceNumber) {
         RedisMessageReader redisMessageReader = new RedisMessageReader(readerConfig.getQueue(),
                 readerConfig.getServer(), redisServers.getStringRedisTemplate(readerConfig.getServer()),
                 readerConfig.getMessageProcessor(),
-                false);
+                readerConfig.getQueue() + "-" + instanceNumber, false);
         redisMessageReader.setMessageProcessor(getMessageProcessor(readerConfig.getMessageProcessor()));
         return redisMessageReader;
     }
@@ -59,9 +63,10 @@ public class RedisMessageInitiator
     private RedisMessageSender instantiateSender(ProducerConfig producerConfig) {
         RedisMessageSender redisMessageSender = new RedisMessageSender(producerConfig.getQueue(),
                 redisServers.getStringRedisTemplate(producerConfig.getServer()), producerConfig.getServer());
-        redisMessageSender.setMessageSerializer(getMessageSerializer(producerConfig.getMessageSerializer()));
 
-        QueueFilter queueFilter = getQueueFilterBy(producerConfig.getFilter());
+        redisMessageSender.setMessageSerializer(getMessageSerializersByName(producerConfig.getMessageSerializer()));
+
+        QueueFilter queueFilter = getQueueFilterByName(producerConfig.getFilter());
         redisMessageSender.setQueueFilter(queueFilter);
 
         return redisMessageSender;

@@ -19,6 +19,7 @@ public class RedisMessageReader extends BaseMessageReader implements Runnable {
     private String server;
     private StringRedisTemplate stringRedisTemplate;
     private String processorName;
+    private String readerName;
 
     private volatile boolean shutdown = false;
 

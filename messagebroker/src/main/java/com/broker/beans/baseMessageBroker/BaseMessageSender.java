@@ -10,8 +10,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public abstract class BaseMessageSender<M> implements MessageSender<M> {
-
-    private QueueFilter queueFilter;
-    private MessageSerializer<M> messageSerializer;
+    protected String queueName;
+    protected QueueFilter queueFilter;
+    protected MessageSerializer<M> messageSerializer;
 
 }

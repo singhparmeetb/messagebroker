@@ -43,12 +43,12 @@ public abstract class MessageInitiator implements ApplicationContextAware {
     private void init() {
         queuesConfig.getProducerConfigs().forEach(x -> {
             populateFilterMap(x);
-            populateMessageSerializerMap(x);
+            populateMessageSerializerMap(x.getMessageSerializer());
         });
 
         queuesConfig.getReaderConfigs().forEach(x -> {
             populateProcessorMap(x);
-            populateMessageSerializerMap(x);
+            populateMessageSerializerMap(x.getMessageSerializer());
         });
 
     }
@@ -82,8 +82,7 @@ public abstract class MessageInitiator implements ApplicationContextAware {
             serializer = applicationContext.getBean("DefaultMessageSerializer",
                     MessageSerializer.class);
         } else {
-            serializer = applicationContext.getBean(readerConfig.getMessageSerializer(),
-                    MessageSerializer.class);
+            serializer = getMessageSerializersByName(readerConfig.getMessageSerializer());
         }
         messageProcessor.setSerializer(serializer);
 
@@ -99,14 +98,14 @@ public abstract class MessageInitiator implements ApplicationContextAware {
         return messageProcessorsByName.get(messageProcessor);
     }
 
-    protected QueueFilter getQueueFilterBy(String filter) {
+    protected QueueFilter getQueueFilterByName(String filter) {
         return filterByNames.get(filter);
     }
 
-    private void populateMessageSerializerMap(ReaderConfig readerConfig) {
+    private void populateMessageSerializerMap(String serializerName) {
         MessageSerializer serializer = null;
-        if (readerConfig.getMessageSerializer() != null || !readerConfig.getMessageSerializer().isBlank()) {
-            serializer = applicationContext.getBean(readerConfig.getMessageSerializer(),
+        if (serializerName != null && !serializerName.isBlank()) {
+            serializer = applicationContext.getBean(serializerName,
                     MessageSerializer.class);
         }
 
@@ -114,28 +113,12 @@ public abstract class MessageInitiator implements ApplicationContextAware {
             this.messageSerializersByName = new HashMap<String, MessageSerializer>();
         }
 
-        if (serializer != null && !messageSerializersByName.containsKey(readerConfig.getMessageSerializer())) {
-            messageSerializersByName.put(readerConfig.getMessageSerializer(), serializer);
+        if (serializer != null && !messageSerializersByName.containsKey(serializerName)) {
+            messageSerializersByName.put(serializerName, serializer);
         }
     }
 
-    private void populateMessageSerializerMap(ProducerConfig producerConfig) {
-        MessageSerializer serializer = null;
-        if (producerConfig.getMessageSerializer() != null || !producerConfig.getMessageSerializer().isBlank()) {
-            serializer = applicationContext.getBean(producerConfig.getMessageSerializer(),
-                    MessageSerializer.class);
-        }
-
-        if (this.messageSerializersByName == null) {
-            this.messageSerializersByName = new HashMap<String, MessageSerializer>();
-        }
-
-        if (serializer != null && !messageSerializersByName.containsKey(producerConfig.getMessageSerializer())) {
-            messageSerializersByName.put(producerConfig.getMessageSerializer(), serializer);
-        }
-    }
-
-    protected MessageSerializer getMessageSerializer(String messageSerializer) {
+    protected MessageSerializer getMessageSerializersByName(String messageSerializer) {
         if (!messageSerializersByName.containsKey(messageSerializer)) {
             return applicationContext.getBean("DefaultMessageSerializer", MessageSerializer.class);
         } else {

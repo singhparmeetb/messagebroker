@@ -33,7 +33,7 @@ public class Notifier {
             // M castedMessage = (M) message;
             String messageToSend = producerToSend.get().getMessageSerializer().serializeMessage(message);
 
-            Long messageId = messageStatusUpdater.prepareToSendMessage(producerToSend.get().getChannel(),
+            Long messageId = messageStatusUpdater.prepareToSendMessage(producerToSend.get().getQueueName(),
                     applicationName,
                     messageToSend);
 

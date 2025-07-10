@@ -3,14 +3,12 @@ package com.broker.beans.baseMessageBroker;
 import com.broker.beans.messageBroker.MessageProcessor;
 import com.broker.beans.messageBroker.MessageReader;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 public abstract class BaseMessageReader implements MessageReader {
 
-    @Setter
-    private MessageProcessor messageProcessor;
+    protected MessageProcessor messageProcessor;
 
     public void readAndProcess() {
 

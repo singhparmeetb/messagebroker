@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RedisMessageSender extends BaseMessageSender<String> {
 
-    private String queueName;
     private StringRedisTemplate stringRedisTemplate;
     private String server;
 
@@ -22,6 +21,12 @@ public class RedisMessageSender extends BaseMessageSender<String> {
     public void send(String message) {
         log.debug("Sending message to queue {} :: {}", queueName, message);
         stringRedisTemplate.opsForList().rightPush(queueName, message);
+    }
+
+    public RedisMessageSender(String queue, StringRedisTemplate stringRedisTemplate, String server) {
+        this.queueName = queue;
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.server = server;
     }
 
     // @Override
