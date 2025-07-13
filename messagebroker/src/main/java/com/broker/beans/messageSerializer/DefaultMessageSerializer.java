@@ -1,6 +1,9 @@
 package com.broker.beans.messageSerializer;
 
-public class SimpleMessageSerializer implements MessageSerializer<String> {
+import org.springframework.stereotype.Component;
+
+@Component("DefaultMessageSerializer")
+public class DefaultMessageSerializer implements MessageSerializer<String> {
 
     @Override
     public String deserializeMessage(String message) {

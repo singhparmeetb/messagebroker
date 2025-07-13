@@ -31,7 +31,8 @@ public abstract class MessageInitiator implements ApplicationContextAware {
     @Autowired
     private QueuesConfig queuesConfig;
 
-    private Map<String, QueueFilter> filterByNames;
+    @Autowired
+    protected Notifier notifier;
 
     private Map<String, MessageProcessor> messageProcessorsByName;
 
@@ -41,8 +42,10 @@ public abstract class MessageInitiator implements ApplicationContextAware {
 
     @PostConstruct
     private void init() {
+
+        log.debug("Inside BaseMessageInitator PostConstruct");
+
         queuesConfig.getProducerConfigs().forEach(x -> {
-            populateFilterMap(x);
             populateMessageSerializerMap(x.getMessageSerializer());
         });
 
@@ -51,22 +54,13 @@ public abstract class MessageInitiator implements ApplicationContextAware {
             populateMessageSerializerMap(x.getMessageSerializer());
         });
 
+        // notifier.setApplicationName(applicationContext.getApplicationName());
+
+        // instantiateReaderAndSenders();
+
     }
 
     // public Integer void getProcessorId();
-
-    private void populateFilterMap(ProducerConfig producerConfig) {
-        if (filterByNames == null) {
-            filterByNames = new HashMap<>();
-        } else if (producerConfig.getFilter() == null || producerConfig.getFilter().isBlank()
-                || producerConfig.getFilterCriteria() == null || producerConfig.getFilterCriteria().isBlank()) {
-            return;
-        }
-
-        QueueFilter filter = applicationContext.getBean(producerConfig.getFilter(), QueueFilter.class);
-        filter.setFilterCriteria(producerConfig.getFilterCriteria());
-        filterByNames.put(producerConfig.getFilter(), filter);
-    }
 
     private void populateProcessorMap(ReaderConfig readerConfig) {
 
@@ -98,8 +92,10 @@ public abstract class MessageInitiator implements ApplicationContextAware {
         return messageProcessorsByName.get(messageProcessor);
     }
 
-    protected QueueFilter getQueueFilterByName(String filter) {
-        return filterByNames.get(filter);
+    protected QueueFilter getQueueFilterByName(String queueFilterName, String filterCriteria) {
+        QueueFilter filter = applicationContext.getBean(queueFilterName, QueueFilter.class);
+        filter.setFilterCriteria(filterCriteria);
+        return filter;
     }
 
     private void populateMessageSerializerMap(String serializerName) {
@@ -125,5 +121,7 @@ public abstract class MessageInitiator implements ApplicationContextAware {
             return messageSerializersByName.get(messageSerializer);
         }
     }
+
+    // public abstract void instantiateReaderAndSenders();
 
 }

@@ -3,7 +3,19 @@ spring:
         name: messagebroker
     profiles:
         active: dev
-            
+
+    datasource:
+      url: jdbc:mysql://localhost:3306/dev       # JDBC URL with your database name
+      username: devuser                         # Database username
+      password: Dev@12321                       # Database password
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # jpa:
+      # show-sql: true                             # Show SQL queries in logs
+      # properties:
+        # hibernate:
+          # format_sql: true
+              
 
 server:
   port: 8081
@@ -20,4 +32,19 @@ redis-servers:
     password: MyRedis
     maxIdle: 5
     maxTotal: 5 
+
+
+queues:
+  producers:
+  - queue: BigMailQueue
+    server: server
+    messageSerializer: DefaultMessageSerializer
+    filter: MessageSizeFilter
+    filterCriteria: GE 10
+
+  - queue: SmallMailQueue
+    server: server
+    messageSerializer: DefaultMessageSerializer
+    filter: MessageSizeFilter
+    filterCriteria: LT 10
 

@@ -1,6 +1,12 @@
 package com.broker.beans.filters;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.broker.exception.ExecutionException;
+
+@Component("MessageTypeFilter")
+@Scope("prototype")
 
 public class MessageTypeFilter implements QueueFilter {
 

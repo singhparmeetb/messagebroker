@@ -1,33 +1,26 @@
 package com.broker.messagebroker;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.broker.messageProcessor.SimpleProcessor;
-import com.broker.redis.config.RedisServers;
-
-import jakarta.annotation.PreDestroy;
 import lombok.extern.log4j.Log4j2;
 
 @EntityScan(value = "com.broker")
 @ComponentScan(value = "com.broker")
 @EnableTransactionManagement
+@EnableJpaRepositories(value = "com.broker")
 @Log4j2
 @SpringBootApplication
 public class MessagebrokerApplication implements CommandLineRunner {
 
 	@Autowired
-	private RedisServers redisServers;
-
-	private Map<RedisQueueReader, Thread> queueReaders;
+	private Notifier notifier;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MessagebrokerApplication.class, args);
@@ -35,31 +28,9 @@ public class MessagebrokerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		redisServers.getStringRedisTemplate("server").opsForList().leftPush("test", "Hello");
-		log.debug("After pushing message to redis");
-		RedisQueueReader queueReader = new RedisQueueReader("test", redisServers.getStringRedisTemplate("server"),
-				new SimpleProcessor(),
-				"TestReader");
-		Thread queueReaderThread = new Thread(queueReader);
-		this.queueReaders = new HashMap<>();
-		this.queueReaders.put(queueReader, queueReaderThread);
-		this.queueReaders.forEach((reader, thread) -> thread.start());
-
-	}
-
-	@PreDestroy
-	public void closeAllReaders() {
-		System.err.println("Inside shutting down in Main");
-		queueReaders.forEach((reader, thread) -> reader.shutdownReader());
-		queueReaders.forEach((reader, thread) -> {
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				log.warn("Inside Interrupted exception in main");
-			}
-		});
-		System.err.println("After shutting down in Main");
+		log.debug("Inside CommmandLineRunner Before Calling Notifier");
+		notifier.sendMessage("Hello Again", 1L);
+		log.debug("After Calling Notifier");
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.broker.redis;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +25,15 @@ public class RedisMessageInitiator
     @Autowired
     private RedisServers redisServers;
 
-    private List<RedisMessageReader> readers;
+    private List<RedisMessageReader> readers = new ArrayList<RedisMessageReader>();
 
-    private List<RedisMessageSender> senders;
+    // private List<RedisMessageSender> senders = new
+    // ArrayList<RedisMessageSender>();
 
     @PostConstruct
     private void init() {
+        log.debug("Inside RedisMessageInitator PostConstruct");
+
         getQueuesConfig().getReaderConfigs().forEach(x -> {
             log.debug("InstantiatingReader");
             for (int i = 0; i < x.getNumberOfInstances(); i++) {
@@ -39,7 +43,7 @@ public class RedisMessageInitiator
 
         getQueuesConfig().getProducerConfigs().forEach(x -> {
             log.debug("Instantiating Producers");
-            senders.add(instantiateSender(x));
+            notifier.addProducer(instantiateSender(x));
         });
 
         startAllReaders();
@@ -66,7 +70,7 @@ public class RedisMessageInitiator
 
         redisMessageSender.setMessageSerializer(getMessageSerializersByName(producerConfig.getMessageSerializer()));
 
-        QueueFilter queueFilter = getQueueFilterByName(producerConfig.getFilter());
+        QueueFilter queueFilter = getQueueFilterByName(producerConfig.getFilter(), producerConfig.getFilterCriteria());
         redisMessageSender.setQueueFilter(queueFilter);
 
         return redisMessageSender;

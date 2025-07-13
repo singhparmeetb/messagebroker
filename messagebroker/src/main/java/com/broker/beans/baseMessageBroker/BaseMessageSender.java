@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 public abstract class BaseMessageSender<M> implements MessageSender<M> {
     protected String queueName;
+    protected String server;
     protected QueueFilter queueFilter;
     protected MessageSerializer<M> messageSerializer;
 

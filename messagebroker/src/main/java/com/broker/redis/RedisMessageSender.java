@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 public class RedisMessageSender extends BaseMessageSender<String> {
 
     private StringRedisTemplate stringRedisTemplate;
-    private String server;
 
     @Override
     public void send(String message) {

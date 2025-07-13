@@ -36,18 +36,18 @@ public class MessageTracker {
     @Column(name = "processor_name")
     private String processorName;
 
-    @Column(name = "message")
+    @Column(name = "message", nullable = false)
     private String message;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private MessageStatuses status;
 
-    @Column(name = "start_time")
-    private LocalDateTime startTime;
+    @Column(name = "processing_start_time")
+    private LocalDateTime processingStartTime;
 
-    @Column(name = "end_time")
-    private LocalDateTime endTime;
+    @Column(name = "processing_end_time")
+    private LocalDateTime processingEndTime;
 
     @Column(name = "last_sent_time")
     private LocalDateTime lastSentTime;
