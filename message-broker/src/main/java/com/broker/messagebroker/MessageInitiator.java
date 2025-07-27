@@ -12,7 +12,6 @@ import com.broker.beans.baseMessageBroker.BaseMessageProcessor;
 import com.broker.beans.filters.QueueFilter;
 import com.broker.beans.messageBroker.MessageProcessor;
 import com.broker.beans.messageSerializer.MessageSerializer;
-import com.broker.config.queueConfig.ProducerConfig;
 import com.broker.config.queueConfig.QueuesConfig;
 import com.broker.config.queueConfig.ReaderConfig;
 import com.broker.exception.ExecutionException;
@@ -79,6 +78,7 @@ public abstract class MessageInitiator implements ApplicationContextAware {
             serializer = getMessageSerializersByName(readerConfig.getMessageSerializer());
         }
         messageProcessor.setSerializer(serializer);
+        messageProcessor.setMessageProcessorName(readerConfig.getMessageProcessor());
 
         messageProcessorsByName.put(readerConfig.getMessageProcessor(), messageProcessor);
 

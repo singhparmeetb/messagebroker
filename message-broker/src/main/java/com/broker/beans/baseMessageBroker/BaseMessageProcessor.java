@@ -2,6 +2,7 @@ package com.broker.beans.baseMessageBroker;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.broker.beans.GenericMessage;
 import com.broker.beans.MessageStatusUpdater;
 import com.broker.beans.messageBroker.MessageProcessor;
 import com.broker.beans.messageSerializer.MessageSerializer;
@@ -15,20 +16,28 @@ public abstract class BaseMessageProcessor<M> implements MessageProcessor<M> {
 
     private MessageSerializer<M> serializer;
 
+    private String messageProcessorName;
+
     @Override
-    public boolean processRawMessage(String message) {
-        Long messageId = getMessageId(message);
+    public boolean processMessage(String rawMessage) {
 
-        statusUpdater.updateMessageProcessingStart(messageId);
+        GenericMessage genericMessage = new GenericMessage(rawMessage);
 
-        process(serializer.deserializeMessage(message));
+        statusUpdater.updateMessageProcessingStart(genericMessage.getMessageId(), messageProcessorName);
 
-        statusUpdater.updateMessageProcessingEnd(messageId);
+        process(serializer.deserializeMessage(genericMessage.getMessage()));
+
+        statusUpdater.updateMessageProcessingEnd(genericMessage.getMessageId());
+
         return true;
     }
 
     public void setSerializer(MessageSerializer<M> serializer) {
         this.serializer = serializer;
+    }
+
+    public void setMessageProcessorName(String messageProcessor) {
+        this.messageProcessorName = messageProcessor;
     }
 
     @Transactional

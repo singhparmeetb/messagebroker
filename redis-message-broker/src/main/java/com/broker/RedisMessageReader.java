@@ -1,5 +1,7 @@
 package com.broker;
 
+import java.time.Duration;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.broker.beans.baseMessageBroker.BaseMessageReader;
@@ -11,7 +13,6 @@ import lombok.extern.log4j.Log4j2;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @Log4j2
 public class RedisMessageReader extends BaseMessageReader implements Runnable {
 
@@ -21,11 +22,22 @@ public class RedisMessageReader extends BaseMessageReader implements Runnable {
     private String processorName;
     private String readerName;
 
+    private Thread thread;
+
     private volatile boolean shutdown = false;
+
+    public RedisMessageReader(String queueName, String server, StringRedisTemplate stringRedisTemplate,
+            String processorName, String readerName) {
+        this.queueName = queueName;
+        this.server = server;
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.processorName = processorName;
+        this.readerName = readerName;
+    }
 
     @Override
     public String read() {
-        return stringRedisTemplate.opsForList().leftPop(queueName);
+        return stringRedisTemplate.opsForList().leftPop(queueName, Duration.ofSeconds(10));
     }
 
     @Override
@@ -42,7 +54,8 @@ public class RedisMessageReader extends BaseMessageReader implements Runnable {
     }
 
     public void start() {
-        Thread.currentThread().start();
+        this.thread = new Thread(this, readerName);
+        this.thread.start();
     }
 
 }

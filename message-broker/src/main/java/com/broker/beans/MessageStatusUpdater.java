@@ -34,11 +34,11 @@ public class MessageStatusUpdater {
     }
 
     @Transactional
-    public void updateMessageProcessingStart(Long messageId) {
+    public void updateMessageProcessingStart(Long messageId, String processorName) {
         log.debug("Updating Processing Start {}", messageId);
         Optional<MessageTracker> message = messageTrackerRepository.findById(messageId);
         if (message.isPresent()) {
-            message.get().setProcessorName("Testing");
+            message.get().setProcessorName(processorName);
             message.get().setStatus(MessageStatuses.PROCESSING);
             message.get().setProcessingStartTime(LocalDateTime.now());
             messageTrackerRepository.save(message.get());
@@ -51,20 +51,21 @@ public class MessageStatusUpdater {
     @Transactional
     public Long prepareToSendMessage(String channel, String fromSystem, String server, String message) {
         MessageTracker messageToSend = populateMessageTracker(channel, fromSystem, server, message);
-        messageTrackerRepository.save(messageToSend);
-        return messageToSend.getId();
+        return messageTrackerRepository.save(messageToSend).getId();
     }
 
     @Transactional
-    public void updateMessageSent(Long messageId) {
-        log.debug("Updating Processing Start {}", messageId);
-        Optional<MessageTracker> message = messageTrackerRepository.findById(messageId);
+    public void updateMessageSent(GenericMessage genericMessage) {
+        log.debug("Updating Processing Start {}", genericMessage);
+        Optional<MessageTracker> message = messageTrackerRepository.findById(genericMessage.getMessageId());
         if (message.isPresent()) {
             message.get().setStatus(MessageStatuses.SENT);
             message.get().setLastSentTime(LocalDateTime.now());
+            message.get().setMessage(genericMessage.getMessageToSend());
             messageTrackerRepository.save(message.get());
         } else {
-            log.warn("Invalid Message Id {} found in {}", messageId, Thread.currentThread().getName());
+            log.warn("Invalid Message Id {} found in {}", genericMessage.getMessageId(),
+                    Thread.currentThread().getName());
             throw new ExecutionException("Invalid Message Id" + " messageId " + "found");
         }
     }

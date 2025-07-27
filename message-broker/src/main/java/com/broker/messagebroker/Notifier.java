@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.broker.beans.GenericMessage;
 import com.broker.beans.MessageStatusUpdater;
 import com.broker.beans.baseMessageBroker.BaseMessageSender;
 import com.broker.exception.ExecutionException;
@@ -42,9 +43,11 @@ public class Notifier {
                     applicationName, producerToSend.get().getServer(),
                     messageToSend);
 
-            producerToSend.get().send(messageToSend);
+            GenericMessage genericMessage = new GenericMessage(messageId, messageToSend, 1);
 
-            messageStatusUpdater.updateMessageSent(messageId);
+            producerToSend.get().send(genericMessage.getMessageToSend());
+
+            messageStatusUpdater.updateMessageSent(genericMessage);
 
         }
 

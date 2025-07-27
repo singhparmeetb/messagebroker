@@ -2,7 +2,6 @@ package com.broker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,7 +52,7 @@ public class RedisMessageInitiator
         RedisMessageReader redisMessageReader = new RedisMessageReader(readerConfig.getQueue(),
                 readerConfig.getServer(), redisServers.getStringRedisTemplate(readerConfig.getServer()),
                 readerConfig.getMessageProcessor(),
-                readerConfig.getQueue() + "-" + instanceNumber, false);
+                readerConfig.getQueue() + "-" + instanceNumber);
         redisMessageReader.setMessageProcessor(getMessageProcessor(readerConfig.getMessageProcessor()));
         return redisMessageReader;
     }
@@ -78,6 +77,7 @@ public class RedisMessageInitiator
 
     @PreDestroy
     private void shutDownAllReaders() {
+        log.debug("Shutting Down Readers");
         readers.stream().forEach(reader -> {
             reader.shutdownReader();
         });

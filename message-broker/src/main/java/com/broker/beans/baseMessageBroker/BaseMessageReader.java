@@ -13,8 +13,11 @@ public abstract class BaseMessageReader implements MessageReader {
     public void readAndProcess() {
 
         String message = read();
+        if (message == null || message.isBlank()) {
+            return;
+        }
         try {
-            messageProcessor.processRawMessage(message);
+            messageProcessor.processMessage(message);
         } catch (Exception e) {
             log.error("Unable to Process Message {} due to exception {}", message, e);
         }
