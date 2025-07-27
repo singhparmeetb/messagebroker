@@ -1,3 +1,4 @@
+package com.broker.demo_app;
 // package com.broker.messagebroker;
 
 // import org.springframework.data.redis.core.StringRedisTemplate;

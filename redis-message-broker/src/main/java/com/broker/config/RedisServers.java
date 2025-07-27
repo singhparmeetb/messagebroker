@@ -1,4 +1,4 @@
-package com.broker.redis.config;
+package com.broker.config;
 
 import java.util.HashMap;
 import java.util.List;

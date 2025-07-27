@@ -1,4 +1,4 @@
-package com.broker.redis;
+package com.broker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.broker.beans.filters.QueueFilter;
 import com.broker.config.queueConfig.ProducerConfig;
 import com.broker.config.queueConfig.ReaderConfig;
 import com.broker.messagebroker.MessageInitiator;
-import com.broker.redis.config.RedisServers;
+import com.broker.config.RedisServers;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;

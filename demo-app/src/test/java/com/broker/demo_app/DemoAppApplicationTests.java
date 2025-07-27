@@ -1,10 +1,10 @@
-package com.broker.messagebroker;
+package com.broker.demo_app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MessagebrokerApplicationTests {
+class DemoAppApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,4 +1,4 @@
-package com.broker.redis;
+package com.broker;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 

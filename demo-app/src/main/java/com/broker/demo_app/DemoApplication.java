@@ -1,4 +1,4 @@
-package com.broker.messagebroker;
+package com.broker.demo_app;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -9,6 +9,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.broker.messagebroker.Notifier;
+
 import lombok.extern.log4j.Log4j2;
 
 @EntityScan(value = "com.broker")
@@ -17,13 +19,13 @@ import lombok.extern.log4j.Log4j2;
 @EnableJpaRepositories(value = "com.broker")
 @Log4j2
 @SpringBootApplication
-public class MessagebrokerApplication implements CommandLineRunner {
+public class DemoApplication implements CommandLineRunner {
 
 	@Autowired
 	private Notifier notifier;
 
 	public static void main(String[] args) {
-		SpringApplication.run(MessagebrokerApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 	}
 
 	@Override
