@@ -28,9 +28,9 @@ public class MessagebrokerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		log.debug("Inside CommmandLineRunner Before Calling Notifier");
-		notifier.sendMessage("Hello Again", 1L);
-		log.debug("After Calling Notifier");
+		// log.debug("Inside CommmandLineRunner Before Calling Notifier");
+		// notifier.sendMessage("Hello Again", 1L);
+		// log.debug("After Calling Notifier");
 	}
 
 }
