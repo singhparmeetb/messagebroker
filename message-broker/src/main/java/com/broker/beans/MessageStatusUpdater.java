@@ -29,7 +29,7 @@ public class MessageStatusUpdater {
             messageTrackerRepository.save(message.get());
         } else {
             log.warn("Invalid Message Id {} found in {}", messageId, Thread.currentThread().getName());
-            throw new ExecutionException("Invalid Message Id" + " messageId " + "found");
+            throw new ExecutionException("Invalid Message Id " + messageId + "found");
         }
     }
 
@@ -44,7 +44,7 @@ public class MessageStatusUpdater {
             messageTrackerRepository.save(message.get());
         } else {
             log.warn("Invalid Message Id {} found in {}", messageId, Thread.currentThread().getName());
-            throw new ExecutionException("Invalid Message Id" + " messageId " + "found");
+            throw new ExecutionException("Invalid Message Id " + messageId + "found");
         }
     }
 
@@ -66,7 +66,7 @@ public class MessageStatusUpdater {
         } else {
             log.warn("Invalid Message Id {} found in {}", genericMessage.getMessageId(),
                     Thread.currentThread().getName());
-            throw new ExecutionException("Invalid Message Id" + " messageId " + "found");
+            throw new ExecutionException("Invalid Message Id " + genericMessage.getMessageId() + "found");
         }
     }
 

@@ -42,7 +42,7 @@ public class RedisMessageInitiator
 
         getQueuesConfig().getProducerConfigs().forEach(x -> {
             log.debug("Instantiating Producers");
-            notifier.addProducer(instantiateSender(x));
+            addProducer(instantiateSender(x));
         });
 
         startAllReaders();

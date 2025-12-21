@@ -1,4 +1,4 @@
-package com.broker.messageProcessor;
+package com.broker.demo_app.processors;
 
 import org.springframework.stereotype.Component;
 

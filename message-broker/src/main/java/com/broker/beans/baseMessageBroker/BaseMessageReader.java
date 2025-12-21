@@ -6,7 +6,7 @@ import com.broker.beans.messageBroker.MessageReader;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public abstract class BaseMessageReader implements MessageReader {
+public abstract class BaseMessageReader implements MessageReader, Runnable {
 
     protected MessageProcessor messageProcessor;
 

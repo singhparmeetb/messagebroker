@@ -6,7 +6,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.broker.beans.baseMessageBroker.BaseMessageReader;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -14,7 +13,7 @@ import lombok.extern.log4j.Log4j2;
 @Getter
 @Setter
 @Log4j2
-public class RedisMessageReader extends BaseMessageReader implements Runnable {
+public class RedisMessageReader extends BaseMessageReader {
 
     private String queueName;
     private String server;

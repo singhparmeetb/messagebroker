@@ -19,7 +19,7 @@ import lombok.Setter;
 @Component
 public class Notifier {
 
-    private List<BaseMessageSender> producers = new ArrayList<BaseMessageSender>();
+    protected List<BaseMessageSender> producers = new ArrayList<BaseMessageSender>();
 
     @Value("${spring.application.name}")
     private String applicationName;
@@ -51,10 +51,6 @@ public class Notifier {
 
         }
 
-    }
-
-    public void addProducer(BaseMessageSender sender) {
-        this.producers.add(sender);
     }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -50,9 +51,9 @@ public class RedisServers {
     }
 
     public void setRedisConfigs(List<RedisConfig> redisConfigs) {
-        this.redisConfigs = redisConfigs;
     }
 
+    @PreDestroy
     public void closeRedisConnections() {
         for (Map.Entry<String, JedisConnectionFactory> entry : redisConnections.entrySet()) {
             entry.getValue().stop();

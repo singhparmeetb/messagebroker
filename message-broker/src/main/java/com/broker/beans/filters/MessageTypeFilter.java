@@ -7,7 +7,6 @@ import com.broker.exception.ExecutionException;
 
 @Component("MessageTypeFilter")
 @Scope("prototype")
-
 public class MessageTypeFilter implements QueueFilter {
 
     private String filterCrieteria;

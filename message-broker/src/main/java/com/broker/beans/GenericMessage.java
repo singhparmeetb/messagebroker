@@ -42,7 +42,7 @@ public class GenericMessage {
             throw new ExecutionException("Invalid message found " + message);
         }
         Long messageId = Long.parseLong(tokens[0]);
-        Integer retryCount = tokens.length == 3 ? Integer.parseInt(tokens[2]) : 1;
+        Integer retryCount = Integer.parseInt(tokens[tokens.length - 1]);
 
         this.messageId = messageId;
         this.message = tokens[1];
